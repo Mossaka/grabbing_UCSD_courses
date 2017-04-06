@@ -10,6 +10,8 @@ Code is not complete!
 TODO:
     * commenting and styling
     * add post requsite courses to the course
+    * consider how to make applications out of the data
+    
 '''
 
 import os
