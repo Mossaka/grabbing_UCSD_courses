@@ -1,5 +1,20 @@
+'''
+
+This module tries to add additional post-requsites courses to each course
+in the fourth line. Since post-requsites courses are not explicitly showed in
+website, this module is created specifically for finding the post-requsites
+courses using pre-requsite courses and adding them to the course.
+
+Code is not complete!
+
+TODO:
+    * use regex or other ways to parse the course ID from pre-requsite line 52
+    * commenting and styling
+
+'''
+
 import os
-import re
+
 rootdir = 'C:/Users/duiba/Documents/UCSDCourses/'
 filenames = os.walk(rootdir)
 #for name in filenames:
