@@ -1,3 +1,7 @@
+'''
+This module returns all the links to the course of different majors at UCSD as a list
+'''
+
 def getalllinks():
     import requests
     from bs4 import BeautifulSoup as bs
