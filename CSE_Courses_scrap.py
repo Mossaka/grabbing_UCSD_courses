@@ -1,10 +1,10 @@
+import os
+
 import requests
 from bs4 import BeautifulSoup as bs
-from urllib.error import HTTPError
-import os
-import re
-import csv
+
 from getAllLinks import getalllinks
+
 
 def filterlist( list ):
     '''
@@ -126,5 +126,5 @@ def main():
                         Prerequisites[i].split(",")[0].rstrip('\n') + "\n")
                 i += 1'''
 
-
-main()
+if __name__ == '__main__' :
+    main()
