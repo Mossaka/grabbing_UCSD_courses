@@ -16,9 +16,6 @@ TODO:
 
 import os
 
-from prerequsite_filters import findcourseID as findIDs
-
-
 rootdir = 'C:/Users/duiba/Documents/UCSDCourses/'
 
 # generator - generates the file names recursively
@@ -57,8 +54,9 @@ for major, courses in majorandcourse.items():
             with open(rootdir + major + "/" + course, 'r') as c:
                 lines = c.readlines()
                 pre = lines[-1]
-                #print(pre)
-                prerequsites = findIDs(pre)
+                with open("C:/Users/duiba/PycharmProjects/grabbing_UCSD_courses/prerequsites_data.txt", "a+") as f:
+                    f.write(course + " :||: " + pre)
+                #prerequsites = findIDs(pre)
 
 
                 # now we get a list of prerequsites

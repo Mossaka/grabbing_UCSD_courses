@@ -1,6 +1,11 @@
 import os
 import re
 
+'''
+TODO:
+    convert Math 20A, or 20B, and 20F to
+            MATH 20A MATH 20B MATH 20F
+'''
 
 def containconsecutive(prere):
     '''
