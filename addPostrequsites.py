@@ -11,12 +11,13 @@ TODO:
     * commenting and styling
     * add post requsite courses to the course
     * consider how to make applications out of the data
-    
+
 '''
 
 import os
 
 from prerequsite_filters import findcourseID as findIDs
+
 
 rootdir = 'C:/Users/duiba/Documents/UCSDCourses/'
 
@@ -56,7 +57,9 @@ for major, courses in majorandcourse.items():
             with open(rootdir + major + "/" + course, 'r') as c:
                 lines = c.readlines()
                 pre = lines[-1]
+                #print(pre)
                 prerequsites = findIDs(pre)
+
 
                 # now we get a list of prerequsites
                 # we want to open them one by one and then write [course] into their fourth line
