@@ -1,3 +1,23 @@
+'''
+This file goes to "http://www.ucsd.edu/catalog/front/courses.html"
+find all the links named "courses" and then grab the courses information
+one by one.
+
+For the given directory, this program will create a folder for every major
+at UCSD. Then it creates a txt file for every course that major has inside
+the folder. Each .txt file contains three lines:
+    1. course complete name
+    2. course description
+    3. course prerequsites (unconverted*)
+
+It takes about two minutes to run and covers >99% of all courses in UCSD
+Some unstandarlized course description will not be written to the file,
+but print the errors to the console.
+
+Author: Jiaxiao Zhou
+Update: 4/7/2017
+
+'''
 import os
 
 import requests
@@ -5,6 +25,7 @@ from bs4 import BeautifulSoup as bs
 
 from getAllLinks import getalllinks
 
+rootdirctory = "C:/Users/duiba/Documents/UCSDCourses/"
 
 def filterlist( list ):
     '''
@@ -18,9 +39,16 @@ def filterlist( list ):
     return list
 
 def getpartsfromlist(list, num):
+    '''
+    It seperates the course description and prerequisites
+    :param list: a list of course descriptions
+    :param num: the index for taking element from the list
+    :return: a list of each course description or prerequisites
+    '''
     toreturn = []
     for item in list:
         item = item.getText().split("Prerequisites: ")
+        # in case when the prerequisites do not exist
         if(len(item) < 2):
             item.append("none.")
         item = item[num]
@@ -28,12 +56,21 @@ def getpartsfromlist(list, num):
         toreturn.append(item)
     return toreturn
 
-def populateidandnames(topopulate, index, courseFields):
+def populateidandnames(index, courseFields):
+    '''
+    populate the course IDs and names into a list
+    :param index: 0 - IDs, 1 - Names
+    :param courseFields: courseFiled such as MATH 140A
+    :return: a list contains each all course IDs or all course names
+    '''
+    topopulate = []
     for courseField in courseFields:
         courseFieldText = courseField.getText()
         try:
             topopulate.append(courseFieldText.split('.')[index])
         except:
+            # it does not have a ID?
+            # TODO
             break
     return topopulate
 
@@ -48,6 +85,10 @@ def stringcorrent(s):
     return s
 
 def formatList(list):
+    '''
+    This function takes a list and then
+    produce a new list with corrected strings
+    '''
     temp = []
     for item in list:
         temp.append(stringcorrent(item))
@@ -68,6 +109,11 @@ def main():
                              "Chrome/22.0.1207.1 Safari/537.1"}
 
     links = getalllinks()
+    # run each link one by one...
+    '''
+    TODO:
+        any suggestions for efficiency improvements?
+    '''
     for link in links:
 
         courseabb = link.split('/')[-1].split('.')[0]
@@ -87,11 +133,11 @@ def main():
         # get the prerequisites for the courses
         Prerequisites = getpartsfromlist(courseDescriptions, -1)
         courseDescriptions = formatList( getpartsfromlist(courseDescriptions, 0) )
-        courseId = formatList(populateidandnames([], 0, courseFields))
-        courseNames = formatList(populateidandnames([], 1, courseFields))
+        courseId = formatList(populateidandnames(0, courseFields))
+        courseNames = formatList(populateidandnames(1, courseFields))
         Prerequisites = formatList(Prerequisites)
 
-        directory = "C:/Users/duiba/Documents/UCSDCourses/" + courseabb + "/"
+        directory = rootdirctory + courseabb + "/"
 
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -109,22 +155,6 @@ def main():
                 print("length of coursedes: " + str(len(courseDescriptions)))
                 print("length of prere: " + str(len(Prerequisites)))
                 break
-
-
-
-
-    '''with open("CSECourses.txt", "a+") as f:
-        f.write("id, name, description\n")
-        for courseName in courseNames:
-            try:
-                temp = courseName.split('\n')
-                f.write(courseId[i] +", " + temp[0].rstrip('\r\n') + \
-                        temp[1].strip() + ", " + Prerequisites[i].split(",")[0].rstrip('\n') +"\n")
-                i += 1
-            except:
-                f.write(courseId[i] + ", " + courseName + ", " + \
-                        Prerequisites[i].split(",")[0].rstrip('\n') + "\n")
-                i += 1'''
 
 if __name__ == '__main__' :
     main()
