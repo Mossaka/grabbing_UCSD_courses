@@ -34,13 +34,21 @@ def consecutivebreak(constring):
     for i in range(len(words)):
 
         # find the consecutive word
-        if "A-B" in words[i]:
+        # TODO: "A-B" does not cover all cases. Need Regex to solve this question
+        if "A-B" or "B-C" or "C-D" or "D-E" in words[i]:
 
             # the course abbreviation, such as MATH
             courseAbb = words[i-1]
 
             # the number, such as 140 from 140A-B-C
-            number = words[i].split("A")[0]
+            if "A" in words[i]:
+                number = words[i].split("A")[0]
+            elif "B" in words[i]:
+                number = words[i].split("B")[0]
+            elif "C" in words[i]:
+                number = words[i].split("C")[0]
+            elif "D" in words[i]:
+                number = words[i].split("D")[0]
 
             coursenums = words[i].split("-")
 
@@ -90,11 +98,10 @@ def findcoursefile(courseid):
     return os.path.exists(coursedir)
 
 def main():
-    courseids = findcourseID("PHYS 100A 105A and MATH 20A MATH 20B MATH 20C MATH 20D MATH 20E  and 20F or 18 Open to major codes EC28 PY26 ")
+    courseids = findcourseID( consecutivebreak("Physics 2B-C-D or 4B-C-D-E, and Mathematics 20A-B-C-D-E and 20F or 18." ))
     for courseid in courseids:
         print(courseid)
         print(findcoursefile(courseid))
-    #for course in courselist:
-    #    print(course)
+
 if __name__ == '__main__' :
     main()
