@@ -26,6 +26,7 @@ from bs4 import BeautifulSoup as bs
 from getAllLinks import getalllinks
 
 rootdirctory = "C:/Users/duiba/Documents/UCSDCourses/"
+testdirectory = "C:/Users/duiba/Documents/UCSDCoursesTest/"
 
 def filterlist( list ):
     '''
@@ -103,58 +104,63 @@ def writetofile(courseid, coursename, coursedes, prerequsites, path):
         except:
             print('failed to write')
 
-def main():
-    # setup
+def writefolderandcourses(link, rdirectory):
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) "
                              "Chrome/22.0.1207.1 Safari/537.1"}
+    courseabb = link.split('/')[-1].split('.')[0]
+    main_url = link
+    start_url = requests.get(main_url, headers=headers)
+    bsObj = bs(start_url.text, 'lxml')
 
-    links = getalllinks()
-    # run each link one by one...
-    '''
-    TODO:
-        any suggestions for efficiency improvements?
-    '''
-    for link in links:
+    # get the content tag
+    content = bsObj.find("div", id="content")
 
-        courseabb = link.split('/')[-1].split('.')[0]
-        main_url = link
-        start_url = requests.get(main_url, headers=headers)
-        bsObj = bs(start_url.text, 'lxml')
+    # get the course fields, including the course ids and actuall name
+    courseFields = content.findAll("p", {"class": "course-name"})
 
-        # get the content tag
-        content = bsObj.find("div",id="content")
+    # get the descriptions courses
+    courseDescriptions = filterlist(content.findAll("p", {"class": "course-descriptions"}))
 
-        # get the course fields, including the course ids and actuall name
-        courseFields = content.findAll("p", {"class":"course-name"})
+    # get the prerequisites for the courses
+    Prerequisites = getpartsfromlist(courseDescriptions, -1)
+    courseDescriptions = formatList(getpartsfromlist(courseDescriptions, 0))
+    courseId = formatList(populateidandnames(0, courseFields))
+    courseNames = formatList(populateidandnames(1, courseFields))
+    Prerequisites = formatList(Prerequisites)
 
-        # get the descriptions courses
-        courseDescriptions = filterlist(content.findAll("p", {"class":"course-descriptions"}))
+    directory = rdirectory + courseabb + "/"
 
-        # get the prerequisites for the courses
-        Prerequisites = getpartsfromlist(courseDescriptions, -1)
-        courseDescriptions = formatList( getpartsfromlist(courseDescriptions, 0) )
-        courseId = formatList(populateidandnames(0, courseFields))
-        courseNames = formatList(populateidandnames(1, courseFields))
-        Prerequisites = formatList(Prerequisites)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
-        directory = rootdirctory + courseabb + "/"
-
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-
-        for index in range(len(courseId)):
-            try:
-                writetofile(courseId[index], courseNames[index],
+    for index in range(len(courseId)):
+        try:
+            writetofile(courseId[index], courseNames[index],
                         courseDescriptions[index], Prerequisites[index],
                         directory)
-            except:
-                print("index out of range for major: " + courseabb + " and the course: " + courseId[index] )
-                print("length of courseid: " + str(len(courseId)))
-                print("length of coursenames: " + str(len(courseNames)))
-                print("length of coursedes: " + str(len(courseDescriptions)))
-                print("length of prere: " + str(len(Prerequisites)))
-                break
+        except:
+            print("index out of range for major: " + courseabb + " and the course: " + courseId[index])
+            print("length of courseid: " + str(len(courseId)))
+            print("length of coursenames: " + str(len(courseNames)))
+            print("length of coursedes: " + str(len(courseDescriptions)))
+            print("length of prere: " + str(len(Prerequisites)))
+            break
+
+
+if __name__ == '__main__':
+    def main():
+
+        links = getalllinks()
+        # run each link one by one...
+        '''
+        TODO:
+            any suggestions for efficiency improvements?
+        '''
+        for link in links:
+            writefolderandcourses(link, rootdirctory)
+        # one problem for BIOL webpage!!
+        # okay, the problems are from the webpage..
+        # nothing to do with it
 
 if __name__ == '__main__' :
     main()

@@ -16,6 +16,11 @@ TODO:
 
 import os
 
+from prerequsite_filters import consecutivebreak
+from prerequsite_filters import containconsecutive
+from prerequsite_filters import findcourseID
+from prerequsite_filters import findcoursefile
+
 rootdir = 'C:/Users/duiba/Documents/UCSDCourses/'
 
 # generator - generates the file names recursively
@@ -27,41 +32,59 @@ filenames = list(filenames)
 # save all the major abbreviations to majorabbs
 majorabbs = filenames[0]
 
-# get the contents only
-for item in majorabbs:
-    if rootdir is not item and item is not []:
-        majorabbs = item
-        del filenames[0]
-        break
+def writetofile():
+    # get the contents only
+    for item in majorabbs:
+        if rootdir is not item and item is not []:
+            majorabbs = item
+            del filenames[0]
+            break
 
-majorandcourse = {}
-allcours = []
+    majorandcourse = {}
+    allcours = []
 
-# get the rest courses for each major
-for index in range(len(majorabbs)):
-    item = filenames[index][-1]
-    if item is []:
-        item = ["none"]
-    majorandcourse[majorabbs[index]] = item
+    # get the rest courses for each major
+    for index in range(len(majorabbs)):
+        item = filenames[index][-1]
+        if item is []:
+            item = ["none"]
+        majorandcourse[majorabbs[index]] = item
 
-for key, value in majorandcourse.items():
-    for course in value:
-        allcours.append(course)
+    for key, value in majorandcourse.items():
+        for course in value:
+            allcours.append(course)
 
-for major, courses in majorandcourse.items():
-    for course in courses:
-        try:
-            with open(rootdir + major + "/" + course, 'r') as c:
-                lines = c.readlines()
-                pre = lines[-1]
-                with open("C:/Users/duiba/PycharmProjects/grabbing_UCSD_courses/prerequsites_data.txt", "a+") as f:
-                    f.write(course + " :||: " + pre)
-                #prerequsites = findIDs(pre)
+    for major, courses in majorandcourse.items():
+        for course in courses:
+            try:
+                with open(rootdir + major + "/" + course, 'r') as c:
+                    lines = c.readlines()
+                    pre = lines[-1]
+                    with open("C:/Users/duiba/PycharmProjects/grabbing_UCSD_courses/prerequsites_data.txt", "a+") as f:
+                        f.write(course + " :||: " + pre)
+            except:
+                print("no file named: " + course)
+
+def addpostrequsites():
+    '''
+    temperately print all post-requisites courses
+    '''
+    a = "C:/Users/duiba/PycharmProjects/grabbing_UCSD_courses/"
+    with open(a + "prerequsites_data.txt", "r") as f:
+        lines = f.readlines()
+        for line in lines:
+            courseids = line.split(":||:")[0]
+            prerequsites = line.split(":||:")[-1]
+            if containconsecutive(prerequsites):
+                prerequsites = consecutivebreak(prerequsites)
+            extractcourseids = findcourseID(prerequsites)
+            for id in extractcourseids:
+                if findcoursefile(id):
+                    print(id + " postrequsites: " + courseids.split('.')[0])
 
 
-                # now we get a list of prerequsites
-                # we want to open them one by one and then write [course] into their fourth line
-                # modulize this method so we can use it later to find prerequsites for the course
+def main():
+    addpostrequsites()
 
-        except:
-            print("no file named: " + course)
+if __name__ == '__main__':
+    main()
