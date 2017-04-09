@@ -7,6 +7,13 @@ TODO:
             MATH 20A MATH 20B MATH 20F
 '''
 
+
+def checkcourseabb_with_majorabb(courseid):
+    '''
+    Check if the course abbs are the same with their major abbs
+    :return: True if they are the same, False otherwise
+    '''
+
 def containconsecutive(prere):
     '''
     check if the given string contains consecutive courses, such as Math 20A-B-C-D
@@ -102,6 +109,7 @@ def main():
     for courseid in courseids:
         print(courseid)
         print(findcoursefile(courseid))
+    print( checkifcourseid("OR 4B") )
 
 if __name__ == '__main__' :
     main()
