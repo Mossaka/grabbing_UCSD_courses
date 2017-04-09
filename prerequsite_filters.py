@@ -6,13 +6,18 @@ TODO:
     convert Math 20A, or 20B, and 20F to
             MATH 20A MATH 20B MATH 20F
 '''
+filenames = os.walk("C:/Users/duiba/Documents/UCSDCourses/")
+filenames = list(filenames)
+majorabbs = filenames[0]
 
-
-def checkcourseabb_with_majorabb(courseid):
-    '''
-    Check if the course abbs are the same with their major abbs
-    :return: True if they are the same, False otherwise
-    '''
+def checkidforall(courseid):
+    for major in majorabbs[1]:
+        walks = os.walk("C:/Users/duiba/Documents/UCSDCourses/"+major+"/")
+        for walk in walks:
+            courses = list(walk)[-1]
+            if courseid + ".txt" in courses:
+                return True
+    return False
 
 def containconsecutive(prere):
     '''
@@ -102,14 +107,17 @@ def findcoursefile(courseid):
     course_abb = courseid.split(" ")[0]
     majordir = rootdir + course_abb + "/"
     coursedir = majordir + courseid + toappend
-    return os.path.exists(coursedir)
+    find = os.path.exists(coursedir)
+    if find:
+        return True
+    else:
+        return checkidforall(courseid)
 
 def main():
-    courseids = findcourseID( consecutivebreak("Physics 2B-C-D or 4B-C-D-E, and Mathematics 20A-B-C-D-E and 20F or 18." ))
-    for courseid in courseids:
-        print(courseid)
-        print(findcoursefile(courseid))
-    print( checkifcourseid("OR 4B") )
-
+    #courseids = findcourseID( consecutivebreak("Physics 2B-C-D or 4B-C-D-E, and Mathematics 20A-B-C-D-E and 20F or 18." ))
+    #for courseid in courseids:
+    #    print(courseid)
+    #    print(findcoursefile(courseid))
+    print ( findcoursefile("BIPN 100") )
 if __name__ == '__main__' :
     main()
