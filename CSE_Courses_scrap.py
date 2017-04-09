@@ -146,19 +146,21 @@ def writefolderandcourses(link, rdirectory):
             print("length of prere: " + str(len(Prerequisites)))
             break
 
-def main():
 
-    links = getalllinks()
-    # run each link one by one...
-    '''
-    TODO:
-        any suggestions for efficiency improvements?
-    '''
-    #for link in links:
-    writefolderandcourses("http://www.ucsd.edu/catalog/courses/BIOL.html", testdirectory)
-    # one problem for BIOL webpage!!
-    # TODO: fixed this problem
+if __name__ == '__main__':
+    def main():
 
+        links = getalllinks()
+        # run each link one by one...
+        '''
+        TODO:
+            any suggestions for efficiency improvements?
+        '''
+        for link in links:
+            writefolderandcourses(link, rootdirctory)
+        # one problem for BIOL webpage!!
+        # okay, the problems are from the webpage..
+        # nothing to do with it
 
 if __name__ == '__main__' :
     main()

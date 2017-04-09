@@ -80,8 +80,6 @@ def addpostrequsites():
             extractcourseids = findcourseID(prerequsites)
             for id in extractcourseids:
                 if findcoursefile(id):
-                    # TODO: if the course abbs are different from their major abb, they won't be detected
-                    # need to be fixed soon
                     print(id + " postrequsites: " + courseids.split('.')[0])
 
 
