@@ -147,20 +147,19 @@ def writefolderandcourses(link, rdirectory):
             break
 
 
-if __name__ == '__main__':
-    def main():
+def main():
 
-        links = getalllinks()
-        # run each link one by one...
-        '''
-        TODO:
-            any suggestions for efficiency improvements?
-        '''
-        for link in links:
-            writefolderandcourses(link, rootdirctory)
-        # one problem for BIOL webpage!!
-        # okay, the problems are from the webpage..
-        # nothing to do with it
+    links = getalllinks()
+    # run each link one by one...
+    '''
+    TODO:
+        any suggestions for efficiency improvements?
+    '''
+    for link in links:
+        writefolderandcourses(link, rootdirctory)
+    # one problem for BIOL webpage!!
+    # okay, the problems are from the webpage..
+    # nothing to do with it
 
 if __name__ == '__main__' :
     main()

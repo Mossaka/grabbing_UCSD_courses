@@ -14,6 +14,9 @@ TODO:
 
 '''
 
+
+#TODO: Make it more object-oriented
+
 import os
 
 from prerequsite_filters import consecutivebreak
@@ -30,11 +33,12 @@ filenames = os.walk(rootdir)
 filenames = list(filenames)
 
 # save all the major abbreviations to majorabbs
-majorabbs = filenames[0]
+major_abbs = filenames[0]
 
 def writetofile():
     # get the contents only
-    for item in majorabbs:
+    majorabbs = major_abbs
+    for item in major_abbs:
         if rootdir is not item and item is not []:
             majorabbs = item
             del filenames[0]
