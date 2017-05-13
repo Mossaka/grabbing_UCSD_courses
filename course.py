@@ -2,8 +2,8 @@ import re
 
 class Course:
     def __init__(self, course_id, name, content):
-        self.course_id = str(course_id)
-        self.name = str(name)
+        self.course_id = self.string_correct(str(course_id))
+        self.name = self.string_correct(str(name))
         self.content = str(content)
         self.prere = {}
         self.postre = {}
@@ -39,7 +39,7 @@ class Course:
         return self.prere
 
     def get_postre(self):
-        return self.postre_
+        return self.postre
 
     def add_to_prere(self, pre_course):
         '''
@@ -60,17 +60,10 @@ class Course:
         if len(items) < 2:
             items.append("none.")
 
-        def string_correct(s):
-            # correct string format
-            s.replace('\n', '').replace('\t', '')
-            s = " ".join(s.split())
-            s = s.split('/')[0]
-            return s
-
-        self.description = string_correct(items[0].rstrip('\r\n'))
+        self.description = self.string_correct(items[0].rstrip('\r\n'))
         self.prere_raw = items[1].rstrip('\r\n')
 
-    def parse_course_pre_to_list(self, majorAbs):
+    def parse_course_pre_to_list(self):
         '''
         This method will transform prere_raw string to a list of course IDs
         '''
@@ -104,3 +97,10 @@ class Course:
     def consecutive_break(self, constring):
         #TODO I need to finishi this function
         pass
+
+    def string_correct(self, s):
+        # correct string format
+        s.replace('\n', '').replace('\t', '')
+        s = " ".join(s.split())
+        s = s.split('/')[0]
+        return s
