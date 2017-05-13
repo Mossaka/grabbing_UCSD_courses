@@ -2,59 +2,84 @@ import re
 
 class Course:
     def __init__(self, course_id, name, content):
+        """
+        Initialize the course id, name, and content
+        Notice that the course_id and name are pre_processed
+        """
+
+        # course id and name need to go over the string_correct function
         self.course_id = self.string_correct(str(course_id))
         self.name = self.string_correct(str(name))
+
         self.content = str(content)
+
+        # uninitialized variables
         self.prere = {}
         self.postre = {}
-        self.description = ""
-        self.prere_raw = ""
+        self.description = None
+        self.prere_raw = None
+
+        # parse description and prerequisite raw data from content var
         self.seperate_content()
 
     def get_course_id(self):
+        """ get the course id"""
         return self.course_id
 
     def set_course_id(self, course_id):
+        """ set the course id"""
         self.course_id = course_id
 
     def get_name(self):
+        """ get the course name"""
         return self.name
 
     def set_name(self, name):
+        """ set the course name"""
         self.name = name
 
     def get_content(self):
+        """ get the course content"""
         return self.content
 
     def set_content(self, content):
+        """ set the course content"""
         self.content = content
 
     def get_description(self):
+        """ get the course description"""
         return self.description
 
     def set_description(self, description):
+        """ set the course description"""
         self.description = description
 
     def get_prere(self):
+        """ get the prerequsite courses. return a dic of Course object"""
         return self.prere
 
     def get_postre(self):
+        """ get the postrequiste courses. return a dic of Course object"""
         return self.postre
 
     def add_to_prere(self, pre_course):
-        '''
+        """
         Add the prerequisite course to the prere dic
-        '''
+        """
         self.prere[pre_course.get_course_id] = pre_course
 
     def add_to_postre(self, post_course):
+        """Add the postrequisite to the postre dic"""
         self.postre[post_course.get_course_id] = post_course
 
+    def __str__(self):
+        return self.course_id
+
     def seperate_content(self):
-        '''
+        """
         Seperate the content string to the description and prerequisite string
         content is in this form : "XXXX. Prerequisites: XXX"
-        '''
+        """
 
         items = self.content.split("Prerequisites: ")
         if len(items) < 2:
@@ -64,16 +89,26 @@ class Course:
         self.prere_raw = items[1].rstrip('\r\n')
 
     def parse_course_pre_to_list(self):
-        '''
+        """
         This method will transform prere_raw string to a list of course IDs
-        '''
+        """
         prere_courses = []
 
         # convert non-word to spaces except "-"
-        self.prere_raw = re.sub("[^\w]", " ", self.prere_raw)
+        self.prere_raw = re.sub("[^\w-]", " ", self.prere_raw)
 
         # split the string by spaces
         words = self.prere_raw.split()
+
+        # check if the string contains number, if True then the string is of the form: "140A"
+        def append_to_list(word, previous_word):
+            if word[0].isdigit():
+
+                # course abbs = words[i-1]
+                toappend = "{} {}".format(previous_word.upper(), word.upper())
+
+                if toappend not in prere_courses:
+                    prere_courses.append(toappend)
 
         # iterate through words to find numbers
         for i in range(len(words)):
@@ -83,14 +118,22 @@ class Course:
                 # define the previous word like MATH
                 previous_word = words[i-1]
 
-            # check if the string contains number, if True then the string is of the form: "140A"
-            if words[i][0].isdigit():
+            if "-" in words[i]:
+                num = re.split("[A-Z]", words[i])[0]
+                letters = re.split("-", words[i])
+                new_words = []
+                for i in range(len(letters)):
+                    if i is 0:
+                        new_words.append(letters[0])
+                    else:
+                        new_words.append(num + letters[i])
+                for word in new_words:
+                    append_to_list(word, previous_word)
+            else:
+                append_to_list(words[i], previous_word)
 
-                # course abbs = words[i-1]
-                toappend = "{} {}".format(previous_word.upper(), words[i].upper())
 
-                if toappend not in prere_courses:
-                    prere_courses.append(toappend)
+
 
         return prere_courses
 
@@ -104,3 +147,5 @@ class Course:
         s = " ".join(s.split())
         s = s.split('/')[0]
         return s
+
+    __repr__ = __str__
