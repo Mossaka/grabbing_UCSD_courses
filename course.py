@@ -8,7 +8,7 @@ class Course:
         """
 
         # course id and name need to go over the string_correct function
-        self.course_id = self.string_correct(str(course_id))
+        self.course_id = self.id_correct(str(course_id))
         self.name = self.string_correct(str(name))
 
         self.content = str(content)
@@ -146,6 +146,12 @@ class Course:
         s.replace('\n', '').replace('\t', '')
         s = " ".join(s.split())
         s = s.split('/')[0]
+        return s
+
+    def id_correct(self, s):
+        # correct string format
+        s.replace('\n', '').replace('\t', '')
+        s = " ".join(s.split())
         return s
 
     __repr__ = __str__

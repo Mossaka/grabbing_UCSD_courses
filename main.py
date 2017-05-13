@@ -13,6 +13,7 @@ class Main:
 
     def __init__(self):
         start_url = requests.get(main_url, headers=headers)
+        self.course_count = 0
         self.bsObj = bs(start_url.text, 'lxml')
         self.major_links = {}
         self.courses = {}
@@ -36,7 +37,7 @@ class Main:
 
         # get the course fields, including the course ids and actuall name
         courseFields = page_content.findAll("p", {"class": "course-name"})
-
+        self.course_count += len(courseFields)
         # Seperate course IDs and course names
         courseIDs = []
         courseNames = []
@@ -44,28 +45,31 @@ class Main:
             id_names = field.getText().split('.')
             if len(id_names) >= 2:
                 courseIDs.append(id_names[0])
-                courseNames.append(id_names[-1])
+                courseNames.append(id_names[1])
+            elif len(id_names[0]) > 40:
+                courseIDs.append(id_names[0].split(":")[0])
+                courseNames.append(id_names[0].split(":")[-1])
             else:
-                print("{} does not have name or id".format(field.getText()))
+                courseIDs.append(id_names[0])
+                courseNames.append(id_names[0])
+
 
         # get the descriptions courses
-        courseDescriptions = self.filterlist(page_content.findAll("p",
+        course_des = self.filterlist(page_content.findAll("p",
                                             {"class": "course-descriptions"}))
-
-        if len(courseDescriptions) == len(courseIDs) == len(courseNames):
-
-            for i in range(len(courseDescriptions)):
-                self.courses[courseIDs[i]] = Course(courseIDs[i], courseNames[i],
-                                                    courseDescriptions[i].getText())
-
-            for key in self.courses:
-                print( str( self.courses[key] ) )
-
+        if len(course_des) == len(courseIDs) == len(courseNames):
+            self.make_Courses(course_des, courseIDs, courseNames)
         else:
-            print("the course info has problems for the url: {}".format(url))
-            print("the length of descriptions is: {}".format(len(courseDescriptions)))
-            print("the length of ids is: {}".format(len(courseIDs)))
-            print("the length of names is: {}".format(len(courseNames)))
+            del course_des[:]
+            for field in courseFields:
+                course_des.append(field.findNext("p"))
+            if len(course_des) == len(courseIDs) == len(courseNames):
+                self.make_Courses(course_des, courseIDs, courseNames)
+            else:
+                print("the course info has problems for the url: {}".format(url))
+                print("the length of descriptions is: {}".format(len(course_des)))
+                print("the length of ids is: {}".format(len(courseIDs)))
+                print("the length of names is: {}".format(len(courseNames)))
 
 
 
@@ -80,11 +84,25 @@ class Main:
                 content_list.remove(item)
         return content_list
 
+    def make_Courses(self, course_des, courseIDs, courseNames):
+        for i in range(len(course_des)):
+            self.courses[courseIDs[i]] = Course(courseIDs[i], courseNames[i],
+                                                course_des[i].getText())
+
     def run(self):
         """runs the main program"""
         self.parse_all_majors()
         for ab, link in self.major_links.items():
             self.parse_courses( link )
 
+        #for key in self.courses:
+        #    print(str(self.courses[key]))
+        #print(self.course_count)
+        #print(self.courses["BIMM 100"].parse_course_pre_to_list())
+        while True:
+            course_id = input("give me a course")
+            
+
 if __name__ == "__main__":
-    Main().parse_courses("http://ucsd.edu/catalog/courses/RSM.html")
+    #Main().parse_courses("http://ucsd.edu/catalog/courses/SOC.html")
+    Main().run()
