@@ -152,14 +152,14 @@ class Course:
         return prere_courses
 
     def string_correct(self, s):
-        # correct string format
+        """ correct string format """
         s.replace('\n', '').replace('\t', '')
         s = " ".join(s.split())
         s = s.split('/')[0]
         return s
 
     def id_correct(self, s):
-        # correct string format
+        """ correct id format """
         s.replace('\n', '').replace('\t', '')
         s = " ".join(s.split())
         return s
