@@ -1,6 +1,6 @@
 # grabbing_UCSD_courses
 
-This project will automatically grab over 4700 courses at UCSD and download into your computer. 
+This project will automatically grab over 5500 courses at UCSD and download into your computer.
 This file goes to "http://www.ucsd.edu/catalog/front/courses.html"
 find all the links named "courses" and then grab the courses information
 one by one.

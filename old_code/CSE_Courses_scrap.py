@@ -23,7 +23,7 @@ import os
 import requests
 from bs4 import BeautifulSoup as bs
 
-from getAllLinks import getalllinks
+from old_code.getAllLinks import getalllinks
 
 rootdirctory = "C:/Users/duiba/Documents/UCSDCourses/"
 testdirectory = "C:/Users/duiba/Documents/UCSDCoursesTest/"

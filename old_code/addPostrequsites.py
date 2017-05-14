@@ -19,10 +19,10 @@ TODO:
 
 import os
 
-from prerequsite_filters import consecutivebreak
-from prerequsite_filters import containconsecutive
-from prerequsite_filters import findcourseID
-from prerequsite_filters import findcoursefile
+from old_code.prerequsite_filters import consecutivebreak
+from old_code.prerequsite_filters import containconsecutive
+from old_code.prerequsite_filters import findcourseID
+from old_code.prerequsite_filters import findcoursefile
 
 rootdir = 'C:/Users/duiba/Documents/UCSDCourses/'
 
