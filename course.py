@@ -75,6 +75,9 @@ class Course:
     def __str__(self):
         return self.course_id
 
+    def get_pre_raw(self):
+        return self.prere_raw
+
     def seperate_content(self):
         """
         Seperate the content string to the description and prerequisite string
@@ -102,13 +105,20 @@ class Course:
 
         # check if the string contains number, if True then the string is of the form: "140A"
         def append_to_list(word, previous_word):
-            if word[0].isdigit():
-
-                # course abbs = words[i-1]
-                toappend = "{} {}".format(previous_word.upper(), word.upper())
-
-                if toappend not in prere_courses:
-                    prere_courses.append(toappend)
+            try:
+                if word[0].isdigit():
+                    toappend = None
+                    # course abbs = words[i-1]
+                    try:
+                        toappend = "{} {}".format(previous_word.upper(), word.upper())
+                    except AttributeError:
+                        #TODO check this error for HIGR 216A-B
+                        print("previous word is {}, word is {}".format(previous_word, word))
+                    if toappend not in prere_courses:
+                        prere_courses.append(toappend)
+            except IndexError:
+                #TODO why this would occur?
+                print("word is {}, previous word is {}".format(word, previous_word))
 
         # iterate through words to find numbers
         for i in range(len(words)):
@@ -128,7 +138,11 @@ class Course:
                     else:
                         new_words.append(num + letters[i])
                 for word in new_words:
-                    append_to_list(word, previous_word)
+                    if word is not None and previous_word is not None:
+                        append_to_list(word, previous_word)
+                    else:
+                        #TODO: what if the word is None?
+                        pass
             else:
                 append_to_list(words[i], previous_word)
 
@@ -136,10 +150,6 @@ class Course:
 
 
         return prere_courses
-
-    def consecutive_break(self, constring):
-        #TODO I need to finishi this function
-        pass
 
     def string_correct(self, s):
         # correct string format
