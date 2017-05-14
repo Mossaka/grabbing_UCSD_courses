@@ -76,9 +76,9 @@ def addpostrequsites():
     a = "C:/Users/duiba/PycharmProjects/grabbing_UCSD_courses/"
     with open(a + "prerequsites_data.txt", "r") as f:
         lines = f.readlines()
-        for line in lines:
-            courseids = line.split(":||:")[0]
-            prerequsites = line.split(":||:")[-1]
+        for line in lines:a
+            courseids = line.split(":||:")[0] #the course id
+            prerequsites = line.split(":||:")[-1] # the prerequisites of
             if containconsecutive(prerequsites):
                 prerequsites = consecutivebreak(prerequsites)
             extractcourseids = findcourseID(prerequsites)
