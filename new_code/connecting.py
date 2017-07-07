@@ -24,7 +24,7 @@ CHOICE_4 = 4
 CHOICE_5 = 5
 CHOICE_6 = 6
 
-class Main:
+class Connector:
     """
     Grab the courses information from the website, parse them to the Courses
     object and them parse both the prerequisites and postrequisites to them
@@ -55,8 +55,6 @@ class Main:
             if 'courses' in link:
                 major_ab = link['href'].split("/")[-1]
                 self.major_links[major_ab.split('.')[0]] = linkfront + major_ab
-
-
 
     def parse_courses(self, url):
         """
@@ -124,8 +122,6 @@ class Main:
                 print("the length of ids is: {}".format(len(courseIDs)))
                 print("the length of names is: {}".format(len(courseNames)))
 
-
-
     def filterlist(self, content_list):
         '''
         to eliminate empty contents in the list
@@ -165,6 +161,16 @@ class Main:
             pre_courses = self.courses[key].get_prere()
             for key_p in pre_courses:
                 pre_courses[key_p].add_to_postre(self.courses[key])
+
+    def find_course(self, course_id):
+        try:
+            _ = self.courses[course_id]
+            return True
+        except KeyError:
+            return False
+
+    def get_course(self, course_id):
+        return self.courses[course_id]
 
     def run(self):
         """runs the main program"""
@@ -226,4 +232,4 @@ class Main:
 
 if __name__ == "__main__":
     #Main().parse_courses("http://ucsd.edu/catalog/courses/SOC.html")
-    Main().run()
+    Connector().run()
