@@ -76,6 +76,7 @@ class MainPage(tk.Frame):
         self.periodiccall()
 
     def periodiccall(self):
+        """A periodic call while thread is still alive. Update the progress bar mainly"""
         self.parse_progress.step(0.25)
         if self.parse_course_thread.is_alive():
             self.after(100, self.periodiccall)
