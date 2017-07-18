@@ -62,7 +62,10 @@ class Connector:
         :param url: the given url for the major that contains all its courses
         """
         # get the content tag
-        start_url = requests.get(url, headers=headers)
+        try:
+            start_url = requests.get(url, headers=headers)
+        except ConnectionError:
+            return False
         self.bsObj = bs(start_url.text, 'lxml')
         page_content = self.bsObj.find('div', id='content')
 
@@ -121,6 +124,7 @@ class Connector:
                 print("the length of des is: {}".format(len(course_des)))
                 print("the length of ids is: {}".format(len(courseIDs)))
                 print("the length of names is: {}".format(len(courseNames)))
+        return True
 
     def filterlist(self, content_list):
         '''
