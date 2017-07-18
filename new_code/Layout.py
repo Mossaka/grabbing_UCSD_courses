@@ -14,31 +14,45 @@ class main_page(tk.Frame):
     def create_widgets(self):
         self.pack(fill=tk.BOTH, expand=True)
 
-        self.grab_course_btn = tk.Button(self, text="Get Courses", command=self._parse_course)
-        self.grab_course_btn.pack()
+        _enter_frame = tk.Frame(self)
+        _enter_frame.pack(fill=tk.BOTH, expand=True)
+        
+        self.grab_course_btn = tk.Button(_enter_frame, text="Get Courses", command=self._parse_course)
+        self.grab_course_btn.grid(row=0, column=4, columnspan=2)
 
-        self.search_frame = tk.Frame(self, height=100, bd=2)
-        self.search_frame.pack(fill=tk.BOTH, expand=True)
+        self.switch = ttk.Combobox(_enter_frame,
+                                   values=('treeview table', 'visualized courses'))
+        self.switch.bind("<<ComboboxSelected>>", func=self.switch_func)
+        self.switch.current(0)
+        self.switch.grid(row=0, column=6, columnspan=2)
 
-        self.search_entry = tk.Entry(self.search_frame, width=50)
+        _enter_frame.columnconfigure(0, weight=4)
+        _enter_frame.columnconfigure(4, weight=1)
+        _enter_frame.columnconfigure(6, weight=1)
+        _enter_frame.columnconfigure(8, weight=4)
+
+        _search_frame = tk.Frame(self, height=100, bd=2)
+        _search_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.search_entry = tk.Entry(_search_frame, width=50)
         self.search_entry.grid(row=1, column=2, columnspan=10, sticky=tk.EW)
 
-        self.search_btn = tk.Button(self.search_frame, text='Search', command=self._search)
+        self.search_btn = tk.Button(_search_frame, text='Search', command=self._search)
         self.search_btn.grid(row=1, column=12, sticky=tk.EW)
-        self.search_frame.columnconfigure(0, weight=5)
-        self.search_frame.rowconfigure(1, weight=5)
-        self.search_frame.rowconfigure(3,weight=10)
-        self.search_frame.columnconfigure(13,weight=5)
+        _search_frame.columnconfigure(0, weight=5)
+        _search_frame.rowconfigure(1, weight=5)
+        _search_frame.rowconfigure(3,weight=10)
+        _search_frame.columnconfigure(13,weight=5)
 
-        self.treeview_frame = tk.Frame(self, height=100)
-        self.treeview_frame.pack(fill=tk.BOTH, expand=True)
-        self.treeview = ttk.Treeview(self.treeview_frame, columns=_fields, selectmode="extended")
+        _interactive_frame = tk.Frame(self, height=100)
+        _interactive_frame.pack(fill=tk.BOTH, expand=True)
+        self.treeview = ttk.Treeview(_interactive_frame, columns=_fields, selectmode="extended")
         self.treeview.grid(row=0, column=1, sticky=tk.NSEW)
 
-        self.treeview_frame.columnconfigure(0, weight=1)
-        self.treeview_frame.columnconfigure(1, weight=8)
-        self.treeview_frame.columnconfigure(2, weight=1)
-        self.treeview_frame.rowconfigure(0, weight=10)
+        _interactive_frame.columnconfigure(0, weight=1)
+        _interactive_frame.columnconfigure(1, weight=8)
+        _interactive_frame.columnconfigure(2, weight=1)
+        _interactive_frame.rowconfigure(0, weight=10)
 
         self.treeview.heading('#0', text='Course ID', anchor = tk.CENTER)
         self.treeview.heading('#1', text='Description', anchor = tk.CENTER)
@@ -46,6 +60,12 @@ class main_page(tk.Frame):
         self.treeview.heading('#3', text='Sequence Courses', anchor = tk.CENTER)
 
         self.treeview.column("#0", stretch=tk.YES, minwidth=10, width=20)
+
+        self.canvas = tk.Canvas(_interactive_frame, width=800, height=400)
+        self.canvas.grid(row=0, column=1, sticky=tk.NSEW)
+        self.canvas.grid_forget()
+        self.canvas.create_oval(100,100,400,400, fill='blue')
+
 
     def _parse_course(self):
         """runs the main program"""
@@ -59,14 +79,22 @@ class main_page(tk.Frame):
         self._connector.parse_prerequisites()
         self._connector.parse_postrequsites()
         print("Parsing success!")
-    
+
+    def switch_func(self, event):
+        if self.switch.get() == 'treeview table':
+            self.canvas.grid_forget()
+            self.treeview.grid(row=0, column=1, sticky=tk.NSEW)
+        else:
+            self.treeview.grid_forget()
+            self.canvas.grid(row=0, column=1, sticky=tk.NSEW)
+
     def _search(self):
         search_text = self.search_entry.get().upper()
 
         #whole match
         if self._connector.find_course(search_text):
             course = self._connector.get_course(search_text)
-            pre_ids = []    
+            pre_ids = []
             for key in course.get_prere():
                 pre_ids.append(course.get_prere()[key].get_course_id())
             post_ids = []
