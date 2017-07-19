@@ -1,7 +1,8 @@
-from new_code import Strings
 import tkinter as tk
-from tkinter import ttk
 from tkinter import messagebox
+from tkinter import ttk
+
+from new_code import Strings
 from new_code.connecting import Connector
 
 

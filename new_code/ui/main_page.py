@@ -1,9 +1,11 @@
-from new_code import Strings
-import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
 import threading
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
+
+from new_code import Strings
 from new_code.connecting import Connector
+from new_code.ui.course_planner import CoursePlanner
 from new_code.ui.tree_view import TreeView
 from new_code.ui.visualized import Visualized
 
@@ -15,6 +17,7 @@ class MainPage(tk.Frame):
         self._connector = Connector()
         self.tree_view_frame = TreeView(master, self._connector)
         self.bubbles = Visualized(master, self._connector)
+        self.course_planner = CoursePlanner(master, self._connector)
         self.parsed = False
         self.parse_progress = None
         self.pages = []
@@ -63,7 +66,8 @@ class MainPage(tk.Frame):
         self.make_widges(self.bubbles)
 
     def open_course_planner(self):
-        pass
+        self.destroy_existing_pages()
+        self.make_widges(self.course_planner)
 
     def start_thread(self):
         """ Multi-Threading implementation of parsing courses"""
