@@ -1,5 +1,5 @@
 from new_code import Strings
-from new_code.ui.main_page import *
+from new_code.ui.mainapp import *
 
 
 class MainProgram:
@@ -10,8 +10,8 @@ class MainProgram:
         self.main_loop()
 
     def main_loop(self):
-        menu = tk.Menu(self.root)
-        app = MainPage(self.root)
+        app = MainApp(self.root)
+        app.pack(side="top", fill="both", expand=True)
         app.mainloop()
 
 if __name__ == '__main__':
