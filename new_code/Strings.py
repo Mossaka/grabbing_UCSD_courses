@@ -8,11 +8,11 @@ TREE_VIEW_BTN_STR = 'Tree View Table'
 VIS_BUBBLES_BTN_STR = 'Visualization Bubbles'
 
 LIGHT_COLOR_CODES = {
-    'blue': "#2196F3",
-    'green': "#43A047",
-    'orange': "#F4511E",
-    'purple': "#8E24AA",
-    'red': "#E53935",
+    0: "#2196F3", # blue
+    1: "#43A047", # green
+    2: "#F4511E", # orange
+    3: "#8E24AA", # purple
+    4: "#E53935", # red
 }
 
 DARK_COLOR_CODES = {

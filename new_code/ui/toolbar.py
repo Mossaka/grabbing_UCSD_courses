@@ -1,6 +1,11 @@
 import tkinter as tk
-from new_code.ui.canvas_rect import AllCourses
+from new_code.ui.singletons import AllCourses
+from new_code.ui.singletons import Canvas
+from new_code.ui.singletons import CoursePlannerSingleton
 from pprint import pprint
+from new_code.ui.course_paint import CoursePaint
+from new_code import Strings
+import csv
 
 class ToolBar(tk.Frame):
     def __init__(self, master=None, *args, **kwargs):
@@ -34,11 +39,35 @@ class ToolBar(tk.Frame):
 
 class File:
     def _open(self):
-        print("this is open!")
+        course_planner= CoursePlannerSingleton()
+        course_planner.update('math 140a')
+        """
+        allcourses = AllCourses.Instance()
+        canvas = Canvas.Instance()
+        canvaspaint = canvas.canvas
+        with open('Planner.csv', 'r') as to_open:
+            to_open_reader = csv.reader(to_open)
+            for row in to_open_reader:
+                if len(row) > 0:
+                    course_paint = CoursePaint(row[1], row[2], width=row[3], height=row[4],
+                                               color=row[5], outline=row[5], id=row[6])
+                    allcourses.allcourses[course_paint.id] = course_paint
+
+        for course_id, course_paint in allcourses.allcourses.items():
+            canvaspaint.create_rectangle(course_paint.x, course_paint.y,
+                                                 course_paint.width, course_paint.height,
+                                                 fill=course_paint.color, outline=course_paint.color,
+                                                 tag=course_id)
+            canvaspaint.create_text(float(course_paint.x) + Strings.OFFSET_X, float(course_paint.y) + Strings.OFFSET_Y,
+                               text=course_id, fill='white', font=Strings.FONT_COURSE)
+        """
 
     def _save(self):
         allcourses = AllCourses.Instance()
-        pprint(allcourses.allcourses)
+        with open('Planner.csv', 'w') as to_save:
+            to_save_writter = csv.writer(to_save, delimiter=',')
+            for key, value in allcourses.allcourses.items():
+                to_save_writter.writerow(key)
 
     def _exit(self):
         print("this is exit!")
