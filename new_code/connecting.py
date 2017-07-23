@@ -39,6 +39,7 @@ class Connector:
         self.bsObj = bs(start_url.text, 'lxml')
         self.major_links = {}
         self.courses = {}
+        self._connected = False
 
     def parse_all_majors(self):
         """
@@ -165,6 +166,11 @@ class Connector:
             pre_courses = self.courses[key].get_prere()
             for key_p in pre_courses:
                 pre_courses[key_p].add_to_postre(self.courses[key])
+        self._connected = True
+
+    @property
+    def connected(self):
+        return self._connected
 
     def find_course(self, course_id):
         try:

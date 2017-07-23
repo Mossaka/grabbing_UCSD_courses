@@ -1,19 +1,13 @@
 import threading
 import tkinter as tk
 from tkinter import messagebox
-from tkinter import ttk
-from pprint import pprint
 from new_code import Strings
-from new_code.connecting import Connector
 from new_code.ui.info_course import ShowInfo
 from new_code.ui.abstract_act import AbstractActivity
 from new_code.ui.singletons import AllCourses
 from new_code.ui.singletons import Canvas
 from new_code.ui.course_paint import CoursePaint
 from random import randint
-
-
-
 
 
 class CoursePlanner(AbstractActivity):
@@ -53,10 +47,14 @@ class CoursePlanner(AbstractActivity):
     def update(self, event=None, course_id=None):
         if not self.enter_etr.get():
             messagebox.showerror("Error: ", "No information is entered")
-
+            return
+        if not self.check_connection():
+            messagebox.showerror("Connection Error", "The courses have been parsed")
+            return
         if course_id is None:
             course_id = self.enter_etr.get().upper()
-
+        if not self._connector.find_course(course_id):
+            messagebox.showerror("Course not found Error", "{} is not found!".format(course_id))
         self.counter += 1
         if self.counter % 9 == 0:
             self.counter = 1

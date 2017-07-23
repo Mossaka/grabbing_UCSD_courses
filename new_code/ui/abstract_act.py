@@ -3,10 +3,11 @@ import tkinter as tk
 
 class AbstractActivity(tk.Frame):
     """ Abstract activites show in the main page """
-    def __init__(self, master=None, *args, **kwargs):
+    def __init__(self, master=None, connector=None, *args, **kwargs):
         """ any activity should have one function frame and interactive frame"""
         super().__init__(master)
         self.is_show = False
+        self._connector = connector
 
 
     def create_widgets(self):
@@ -38,3 +39,6 @@ class AbstractActivity(tk.Frame):
         self.function_frame.pack(fill=tk.BOTH, expand=True)
         self.interactive_frame.pack(fill=tk.BOTH)
         self.is_show = False
+
+    def check_connection(self):
+        return self._connector.connected
