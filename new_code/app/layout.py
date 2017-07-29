@@ -1,5 +1,4 @@
-from new_code import Strings
-from new_code.ui.mainapp import *
+from new_code.ui_main.mainapp import *
 
 
 class MainProgram:

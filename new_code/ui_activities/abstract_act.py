@@ -9,7 +9,6 @@ class AbstractActivity(tk.Frame):
         self.is_show = False
         self._connector = connector
 
-
     def create_widgets(self):
         """ create all the widgets"""
         self.function_frame_()

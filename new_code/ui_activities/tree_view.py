@@ -3,17 +3,16 @@ from tkinter import messagebox
 from tkinter import ttk
 
 from new_code import Strings
-from new_code.connecting import Connector
+from new_code.ui_activities.abstract_act import AbstractActivity
 
-from new_code.ui.abstract_act import AbstractActivity
 
-class Visualized(AbstractActivity):
+class TreeView(AbstractActivity):
+    """ the treeview class """
     def __init__(self, tk_frame=None, connector=None):
         super().__init__(tk_frame)
         self.tk_frame = tk_frame
         self.search_entry = None
-        self.canvas = None
-        self.function_frame = None
+        self.tree_view = None
         self._connector = connector
 
     def instruction_frame_(self):
@@ -37,17 +36,35 @@ class Visualized(AbstractActivity):
     def interactive_frame_(self):
         self.interactive_frame = tk.Frame(self.tk_frame, height=100)
         self.interactive_frame.pack(fill=tk.BOTH, expand=True)
+        self.tree_view = ttk.Treeview(self.interactive_frame, columns=Strings.FIELDS, selectmode="extended")
+        self.tree_view.grid(row=0, column=1, sticky=tk.NSEW)
+
         self.interactive_frame.columnconfigure(0, weight=1)
         self.interactive_frame.columnconfigure(1, weight=8)
         self.interactive_frame.columnconfigure(2, weight=1)
         self.interactive_frame.rowconfigure(0, weight=10)
 
-        self.canvas = tk.Canvas(self.interactive_frame, width=800, height=400)
-        self.canvas.grid(row=0, column=1, sticky=tk.NSEW)
-        self.canvas.create_oval(100, 100, 400, 400, fill='blue')
+        self.tree_view.heading('#0', text='Course ID', anchor=tk.CENTER)
+        self.tree_view.heading('#1', text='Description', anchor=tk.CENTER)
+        self.tree_view.heading('#2', text='Pre-requisites', anchor=tk.CENTER)
+        self.tree_view.heading('#3', text='Sequence Courses', anchor=tk.CENTER)
+        self.tree_view.column("#0", stretch=tk.YES, minwidth=10, width=20)
 
     def _search(self, event=None):
         search_text = self.search_entry.get().upper()
         # whole match
         if self._connector.find_course(search_text):
-            pass
+            course = self._connector.get_course(search_text)
+            pre_ids = []
+            for key in course.get_prere():
+                pre_ids.append(course.get_prere()[key].get_course_id())
+            post_ids = []
+            for key in course.get_postre():
+                post_ids.append(course.get_postre()[key].get_course_id())
+            pre_id_str = ','.join(pre_ids)
+            post_id_str = ','.join(post_ids)
+            values = (course.get_description(), pre_id_str, post_id_str)
+            self.tree_view.insert('', 'end', text=search_text, values=values)
+        else:
+            messagebox.showinfo('Course not Found!', 'Please enter another course ID')
+

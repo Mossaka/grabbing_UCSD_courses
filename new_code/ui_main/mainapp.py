@@ -2,14 +2,15 @@ import threading
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
+
 from new_code import Strings
 from new_code.connecting import Connector
-from new_code.ui.course_planner import CoursePlanner
-from new_code.ui.tree_view import TreeView
-from new_code.ui.visualized import Visualized
-from new_code.ui.navbar import NavBar
-from new_code.ui.toolbar import ToolBar
-from new_code.ui.statusbar import StatusBar
+from new_code.ui_activities.course_planner import CoursePlanner
+from new_code.ui_activities.tree_view import TreeView
+from new_code.ui_activities.visualized import Visualized
+from new_code.ui_main.navbar import NavBar
+from new_code.ui_main.statusbar import StatusBar
+from new_code.ui_main.toolbar import ToolBar
 
 
 class MainApp(tk.Frame):

@@ -1,13 +1,14 @@
 class CoursePaint:
-    def __init__(self, x, y, width=10, height=10, color=None, outline=None, id=None):
+    def __init__(self, x, y, width=10, height=10, color=None, id=None, canvas=None):
         self._x = x
         self._y = y
         self._width = width
         self._height = height
         self._color = color
-        self._outline = outline
         self._id = id
+        self.canvas = canvas
         self._ui_id = None
+        self.level = None
 
     @property
     def ui_id(self):
@@ -34,10 +35,6 @@ class CoursePaint:
         return self._color
 
     @property
-    def outline(self):
-        return self._outline
-
-    @property
     def id(self):
         return self._id
 
@@ -53,13 +50,9 @@ class CoursePaint:
     def color(self, color):
         self._color = color
 
-    @outline.setter
-    def outline(self, outline):
-        self._outline = outline
-
     @id.setter
     def id(self, id):
-        self._id = id\
+        self._id = id
 
     @x.setter
     def x(self, x):

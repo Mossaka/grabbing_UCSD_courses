@@ -1,4 +1,4 @@
-from new_code.ui.singleton import Singleton
+from new_code.ui_main.singleton import Singleton
 
 @Singleton
 class AllCourses:

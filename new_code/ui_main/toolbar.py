@@ -1,11 +1,9 @@
-import tkinter as tk
-from new_code.ui.singletons import AllCourses
-from new_code.ui.singletons import Canvas
-from new_code.ui.singletons import CoursePlannerSingleton
-from pprint import pprint
-from new_code.ui.course_paint import CoursePaint
-from new_code import Strings
 import csv
+import tkinter as tk
+
+from new_code.ui.singletons import AllCourses
+from new_code.ui.singletons import CoursePlannerSingleton
+
 
 class ToolBar(tk.Frame):
     def __init__(self, master=None, *args, **kwargs):
