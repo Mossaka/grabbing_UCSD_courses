@@ -30,7 +30,7 @@ class CoursePlanner(AbstractActivity):
         self.row = 0
 
     def instruction_frame_(self):
-        self.instruction_frame.pack(fill=tk.BOTh, expand=True)
+        self.instruction_frame.pack(fill=tk.BOTH, expand=True)
 
     def function_frame_(self):
         self.function_frame.pack(fill=tk.BOTH, expand=True)

@@ -17,7 +17,7 @@ class Course(object):
         self.prere = {}
         self.postre = {}
         self.description = None
-        self.major_title = None
+        self.department_title = None
         self.course_level = None
 
         # parse description and prerequisite raw data from content var
@@ -57,10 +57,10 @@ class Course(object):
 
     def get_major_title(self):
         """ get the major the course belongs """
-        return self.major_title
+        return self.department_title
 
     def set_major_title(self, title):
-        self.major_title = title
+        self.department_title = title
 
     def get_prere(self):
         """ get the prerequsite courses. return a dic of Course object"""

@@ -26,6 +26,8 @@ CHOICE_4 = 4
 CHOICE_5 = 5
 CHOICE_6 = 6
 
+
+
 class Connector:
     """
     Grab the courses information from the website, parse them to the Courses
