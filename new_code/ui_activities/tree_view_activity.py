@@ -3,7 +3,7 @@ from tkinter import messagebox
 from tkinter import ttk
 
 from new_code import Strings
-from new_code.ui_activities.abstract_act import AbstractActivity
+from new_code.ui_activities.abstract_activity import AbstractActivity
 
 
 class TreeView(AbstractActivity):
@@ -45,9 +45,11 @@ class TreeView(AbstractActivity):
         self.interactive_frame.rowconfigure(0, weight=10)
 
         self.tree_view.heading('#0', text='Course ID', anchor=tk.CENTER)
-        self.tree_view.heading('#1', text='Description', anchor=tk.CENTER)
-        self.tree_view.heading('#2', text='Pre-requisites', anchor=tk.CENTER)
-        self.tree_view.heading('#3', text='Sequence Courses', anchor=tk.CENTER)
+        self.tree_view.heading('#1', text='Level', anchor=tk.CENTER)
+        self.tree_view.heading('#2', text='Major', anchor=tk.CENTER)
+        self.tree_view.heading('#3', text='Description', anchor=tk.CENTER)
+        self.tree_view.heading('#4', text='Pre-requisites', anchor=tk.CENTER)
+        self.tree_view.heading('#5', text='Sequence Courses', anchor=tk.CENTER)
         self.tree_view.column("#0", stretch=tk.YES, minwidth=10, width=20)
 
     def _search(self, event=None):
@@ -63,7 +65,8 @@ class TreeView(AbstractActivity):
                 post_ids.append(course.get_postre()[key].get_course_id())
             pre_id_str = ','.join(pre_ids)
             post_id_str = ','.join(post_ids)
-            values = (course.get_description(), pre_id_str, post_id_str)
+            values = (course.get_level(), course.get_major_title(),
+                      course.get_description(), pre_id_str, post_id_str)
             self.tree_view.insert('', 'end', text=search_text, values=values)
         else:
             messagebox.showinfo('Course not Found!', 'Please enter another course ID')

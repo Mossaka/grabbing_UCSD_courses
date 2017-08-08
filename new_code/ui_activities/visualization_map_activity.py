@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from new_code.ui_activities.abstract_act import AbstractActivity
+from new_code.ui_activities.abstract_activity import AbstractActivity
 
 class Visualized(AbstractActivity):
     def __init__(self, tk_frame=None, connector=None):

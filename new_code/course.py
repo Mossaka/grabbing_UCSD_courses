@@ -1,14 +1,14 @@
 import re
 
-class Course:
+class Course(object):
+
     def __init__(self, course_id, name, content):
         """
         Initialize the course id, name, and content
         Notice that the course_id and name are pre_processed
         """
-
         # course id and name need to go over the string_correct function
-        self.course_id = self.id_correct(str(course_id))
+        self.ID = self.id_correct(str(course_id))
         self.name = self.string_correct(str(name))
 
         self.content = str(content)
@@ -17,18 +17,19 @@ class Course:
         self.prere = {}
         self.postre = {}
         self.description = None
-        self.prere_raw = None
+        self.major_title = None
+        self.course_level = None
 
         # parse description and prerequisite raw data from content var
         self.seperate_content()
 
     def get_course_id(self):
         """ get the course id"""
-        return self.course_id
+        return self.ID
 
     def set_course_id(self, course_id):
         """ set the course id"""
-        self.course_id = course_id
+        self.ID = course_id
 
     def get_name(self):
         """ get the course name"""
@@ -54,6 +55,13 @@ class Course:
         """ set the course description"""
         self.description = description
 
+    def get_major_title(self):
+        """ get the major the course belongs """
+        return self.major_title
+
+    def set_major_title(self, title):
+        self.major_title = title
+
     def get_prere(self):
         """ get the prerequsite courses. return a dic of Course object"""
         return self.prere
@@ -73,7 +81,10 @@ class Course:
         self.postre[post_course.get_course_id] = post_course
 
     def __str__(self):
-        return self.course_id
+        return self.ID
+
+    def get_level(self):
+        return self.course_level
 
     def get_pre_raw(self):
         return self.prere_raw
@@ -91,6 +102,7 @@ class Course:
         self.description = self.string_correct(items[0].rstrip('\r\n'))
         self.prere_raw = items[1].rstrip('\r\n')
 
+    # TODO those parsing methods should go to string process file (which will be created later) #
     def parse_course_pre_to_list(self):
         """
         This method will transform prere_raw string to a list of course IDs
@@ -146,9 +158,6 @@ class Course:
             else:
                 append_to_list(words[i], previous_word)
 
-
-
-
         return prere_courses
 
     def string_correct(self, s):
@@ -165,3 +174,5 @@ class Course:
         return s
 
     __repr__ = __str__
+
+
