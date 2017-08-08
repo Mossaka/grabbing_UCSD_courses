@@ -1,0 +1,5 @@
+class TODO:
+    def __init__():
+        #TODO: implement the search function (AND and OR, Case, by major, level, prere, postre)
+        #TODO: visualization map could be crafted more
+        pass

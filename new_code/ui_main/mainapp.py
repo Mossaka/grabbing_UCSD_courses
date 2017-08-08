@@ -5,9 +5,9 @@ from tkinter import ttk
 
 from new_code import Strings
 from new_code.connecting import Connector
-from new_code.ui_activities.course_planner import CoursePlanner
-from new_code.ui_activities.tree_view import TreeView
-from new_code.ui_activities.visualized import Visualized
+from new_code.ui_activities.course_planner_activity import CoursePlanner
+from new_code.ui_activities.tree_view_activity import TreeView
+from new_code.ui_activities.visualization_map_activity import Visualized
 from new_code.ui_main.navbar import NavBar
 from new_code.ui_main.statusbar import StatusBar
 from new_code.ui_main.toolbar import ToolBar

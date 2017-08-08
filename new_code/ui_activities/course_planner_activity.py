@@ -5,9 +5,9 @@ from tkinter import messagebox
 from new_code import Strings
 from new_code.ui.singletons import AllCourses
 from new_code.ui.singletons import Canvas
-from new_code.ui_activities.abstract_act import AbstractActivity
-from new_code.ui_activities.course_planner.course_paint_factory import CoursePaintFactory
-from new_code.ui_activities.course_planner.info_course import ShowInfo
+from new_code.ui_activities.abstract_activity import AbstractActivity
+from new_code.ui_activities.course_planner_components.course_information_window import ShowInfo
+from new_code.ui_activities.course_planner_components.course_paint import CoursePaint
 
 
 class CoursePlanner(AbstractActivity):
@@ -68,8 +68,7 @@ class CoursePlanner(AbstractActivity):
         self.make_rectangle(x1, y1, x2, y2, Strings.LIGHT_COLOR_CODES[randint(0, 4)], course_id )
 
     def make_rectangle(self, x, y, width, height, color, course_id=None):
-        course_paint_factory = CoursePaintFactory(x, y, width=width, height=height, color=color, id=course_id)
-        course_paint_factory.paint_course()
+        course_paint = CoursePaint(x, y, width=width, height=height, color=color, id=course_id)
         if course_id:
             self.courses.allcourses[course_id] = course_paint
             ui_id = self.paintcanvas.create_rectangle(course_paint.x, course_paint.y,

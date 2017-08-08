@@ -1,7 +1,9 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup as bs
 
-from new_code.course import Course
+from new_code.course_factory import Factory
 
 headers = {'User-Agent': "Mozilla/5.0 (Windows NT 6.1; WOW64) "
                          "AppleWebKit/537.1 (KHTML, like Gecko) "
@@ -35,9 +37,9 @@ class Connector:
         Initialize the Beautiful Soup Object
         """
         start_url = requests.get(main_url, headers=headers)
-        self.course_count = 0
-        self.bsObj = bs(start_url.text, 'lxml')
-        self.major_links = {}
+        self.beautifulSoup_obj = bs(start_url.text, 'lxml') #beautiful soup object
+        self.major_links = {}  # store links for all majors
+        self.major_titles = {}  # store all major titles, using major abbreviation as keys
         self.courses = {}
         self._connected = False
 
@@ -48,14 +50,16 @@ class Connector:
         """
 
         # find the content div tag
-        content = self.bsObj.find("div", id="content")
-        # find links by looking for a
-        links = content.findAll("a", href=True)
+        content = self.beautifulSoup_obj.find("div", id="content")
+
+        # find links by looking for <a>
+        links = content.findAll("a")
+        # check if "courses" is in the link
         for link in links:
-            # check if "courses" is in the link
             if 'courses' in link:
-                major_ab = link['href'].split("/")[-1]
-                self.major_links[major_ab.split('.')[0]] = linkfront + major_ab
+                major_abbreviation = link['href'].split("/")[-1] # get the abbreviation for the major
+                self.major_links[major_abbreviation.split('.')[0]] = linkfront + major_abbreviation
+                self.major_titles[linkfront + major_abbreviation] = link.get('title')
 
     def parse_courses(self, url):
         """
@@ -67,12 +71,14 @@ class Connector:
             start_url = requests.get(url, headers=headers)
         except ConnectionError:
             return False
-        self.bsObj = bs(start_url.text, 'lxml')
-        page_content = self.bsObj.find('div', id='content')
+        except requests.exceptions.ConnectionError:
+            print("parse course fails for url: {}".format(url))
+            return False
+        self.beautifulSoup_obj = bs(start_url.text, 'lxml')
+        page_content = self.beautifulSoup_obj.find('div', id='content')
 
         # get the course fields, including the course ids and actuall name
         courseFields = page_content.findAll("p", {"class": "course-name"})
-        self.course_count += len(courseFields)
 
         # Seperate course IDs and course names
         courseIDs = []
@@ -105,7 +111,7 @@ class Connector:
         if len(course_des) == len(courseIDs) == len(courseNames):
 
             # make course object and store it to the courses dic
-            self.make_Courses(course_des, courseIDs, courseNames)
+            self.make_Courses(url, course_des, courseIDs, courseNames)
 
         # if not, use the second way, find the course field and assume the next
         # paragraph tag be the description
@@ -118,7 +124,7 @@ class Connector:
                 course_des.append(field.findNext("p"))
             # check length
             if len(course_des) == len(courseIDs) == len(courseNames):
-                self.make_Courses(course_des, courseIDs, courseNames)
+                self.make_Courses(url, course_des, courseIDs, courseNames)
             else:
                 # if both ways do not work, print out the url and the lengths
                 print("the url: {} has problem".format(url))
@@ -139,18 +145,44 @@ class Connector:
                 content_list.remove(item)
         return content_list
 
-    def make_Courses(self, course_des, courseIDs, courseNames):
+    def _InspectCourseLevel(self, course_ID):
+        """ a private method for parsing the course level """
+        #TODO there should be a structure change: all the string parsing should go to another class
+        #TODO connecting file should only deal with connecting issues
+        try:
+            _second_half = course_ID.split()[-1]
+            _number_only = re.split("[A-Z]", _second_half)[0]
+        except IndexError:
+            print(course_ID)
+            return None
+        try:
+            _level = int(_number_only)
+            if _level >= 200:
+                return "GraduateCourse"
+            elif _level >= 100:
+                return "UpperCourse"
+            else:
+                return "LowerCourse"
+        except ValueError:
+            print(course_ID)
+            return None
+
+    def make_Courses(self, url, course_des, courseIDs, courseNames):
         """
         create a Course object and uses its id as a key to store to the
         courses dictionary
+        :param url, for the key to the hashtable of courselevel
         :param course_des: the description of the course
         :param courseIDs:  the id of the course
         :param courseNames: the name of the course
         :return:
         """
         for i in range(len(course_des)):
-            self.courses[courseIDs[i]] = Course(courseIDs[i], courseNames[i],
-                                                course_des[i].getText())
+            if self._InspectCourseLevel(courseIDs[i]):
+                self.courses[courseIDs[i]] = Factory.make_course( self._InspectCourseLevel(courseIDs[i]),
+                                            courseIDs[i], courseNames[i], course_des[i].getText())
+                #TODO integrate this to the factory
+                self.courses[courseIDs[i]].set_major_title(self.major_titles[url])
 
     def parse_prerequisites(self):
         """ parse the prerequisite courses into each course """
@@ -182,12 +214,14 @@ class Connector:
     def get_course(self, course_id):
         return self.courses[course_id]
 
+    # No longer needed. A GUI is developed for replacing the command-line program
     def run(self):
-        """runs the main program"""
+        #runs the main program
         self.parse_all_majors()
         print("---start parsing courses from websites---")
         for ab, link in self.major_links.items():
             self.parse_courses(link)
+
         print("Parsing success!")
         print("---start parsing prerequisites and postrequisites---")
 

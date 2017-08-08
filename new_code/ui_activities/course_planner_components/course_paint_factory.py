@@ -1,4 +1,4 @@
-from new_code.ui_activities.course_planner.course_paint import CoursePaint
+from new_code.ui_activities.course_planner_components.course_paint import CoursePaint
 
 
 class CoursePaintFactory:
