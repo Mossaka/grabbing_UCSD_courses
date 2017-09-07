@@ -74,11 +74,17 @@ class Course(object):
         """
         Add the prerequisite course to the prere dic
         """
-        self.prere[pre_course.get_course_id] = pre_course
+        self.prere[pre_course.get_course_id()] = pre_course
 
     def add_to_postre(self, post_course):
         """Add the postrequisite to the postre dic"""
-        self.postre[post_course.get_course_id] = post_course
+        self.postre[post_course.get_course_id()] = post_course
+
+    def get_pre_id_list(self):
+        return list(self.prere.keys())
+
+    def get_post_id_list(self):
+        return list(self.postre.keys())
 
     def __str__(self):
         return self.ID

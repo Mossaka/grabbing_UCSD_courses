@@ -28,6 +28,7 @@ class TreeView(AbstractActivity):
         self.search_entry.bind("<Return>", self._search)
         search_btn = tk.Button(self.function_frame, text='Search', command=self._search)
         search_btn.grid(row=1, column=12, sticky=tk.EW)
+
         self.function_frame.columnconfigure(0, weight=5)
         self.function_frame.rowconfigure(1, weight=5)
         self.function_frame.rowconfigure(3, weight=10)

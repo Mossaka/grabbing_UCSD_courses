@@ -1,5 +1,4 @@
 import re
-
 import requests
 from bs4 import BeautifulSoup as bs
 
@@ -202,6 +201,23 @@ class Connector:
                 pre_courses[key_p].add_to_postre(self.courses[key])
         self._connected = True
 
+    def _parse_all(self):
+        self.parse_all_majors()
+        print("---start parsing courses from websites---")
+        for ab, link in self.major_links.items():
+            self.parse_courses(link)
+
+        print("Parsing success!")
+        print("---start parsing prerequisites and postrequisites---")
+
+        self.parse_prerequisites()
+        self.parse_postrequsites()
+        print("Parsing success!")
+
+    def get_all_courses(self):
+        self._parse_all()
+        return self.courses
+
     @property
     def connected(self):
         return self._connected
@@ -215,6 +231,7 @@ class Connector:
 
     def get_course(self, course_id):
         return self.courses[course_id]
+
 
     # No longer needed. A GUI is developed for replacing the command-line program
     def run(self):
